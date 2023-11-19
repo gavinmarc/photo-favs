@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\Api\ToggleFavoriteController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\StartpageController;
+use App\Http\Controllers\ToggleFavoriteController;
 use Illuminate\Support\Facades\Route;
 
 /*
