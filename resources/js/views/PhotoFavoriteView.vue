@@ -19,27 +19,24 @@
       </div>
     </div>
 
-    <div class="flex justify-between">
-      <button class="px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:cursor-pointer transition duration-150 ease-in-out"
-              @click="previous"
-      >
+    <div class="flex justify-between mt-8">
+      <Button @click="previous" :disabled="start <= 0">
         Previous Page
-      </button>
-      <button class="px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:cursor-pointer transition duration-150 ease-in-out"
-              @click="next"
-      >
+      </Button>
+      <Button @click="next" :disabled="!hasNextPage">
         Next Page
-      </button>
+      </Button>
     </div>
   </div>
 </template>
 
 <script>
 import FavStart from "../components/FavStart.vue";
+import Button from "../components/Button.vue";
 
 export default {
   name: 'PhotoFavoriteView',
-  components: {FavStart},
+  components: {Button, FavStart},
 
   props: ['initialIds'],
 
@@ -57,6 +54,12 @@ export default {
     this.starredIds = this.initialIds;
 
     this.fetchPhotos();
+  },
+
+  computed: {
+    hasNextPage() {
+      return this.start + this.perPage < this.totalPhotos;
+    },
   },
 
   methods: {
@@ -77,15 +80,11 @@ export default {
     },
 
     next() {
-      if (!this.hasNextPage()) return;
+      if (!this.hasNextPage) return;
 
       this.start += this.perPage;
 
       this.fetchPhotos();
-    },
-
-    hasNextPage() {
-      return this.start + this.perPage < this.totalPhotos;
     },
 
     toggleFavorite(photo) {
@@ -104,8 +103,7 @@ export default {
         'photo_url': photo.url,
       };
 
-      axios.post('/favorites/toggle', body)
-          .then(res => console.log(res));
+      axios.post('/favorites/toggle', body);
     }
   }
 }
